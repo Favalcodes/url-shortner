@@ -3,6 +3,8 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const connectDb = require('./database')
 const router = require('./routes')
+const { getUrl } = require('./services/urlService')
+const errorHandler = require('./validator/errorHandler')
 require('dotenv').config()
 
 
@@ -16,7 +18,9 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(bodyParser.urlencoded({ extended: true}))
 app.use(bodyParser.json())
-app.use('/', require('./routes'))
+app.get('/:url', getUrl)
+app.use('/api', require('./routes'))
+app.use(errorHandler)
 
 app.listen(process.env.PORT, () => {
     console.log(`server started on ${process.env.APP_URL}:${process.env.PORT}`)
